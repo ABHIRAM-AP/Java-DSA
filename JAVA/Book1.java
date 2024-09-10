@@ -4,14 +4,12 @@ import java.util.*;
     public static void main(String[] args) {
         
         Scanner s = new Scanner(System.in);
-        System.out.print("Enter the number:");
-        int item_no = s.nextInt();
         
-         s.nextLine();
-        BookDetails b[] =new BookDetails[item_no];
+        BookDetails b[] =new BookDetails[2];
          
-        for(int i=0;i<item_no;i++)
+        for(int i=0;i<2;i++)
     {
+        b[i]=new BookDetails();
        System.out.println();
          System.out.println("Enter the title of book:");
              String title = s.nextLine();
@@ -23,17 +21,33 @@ import java.util.*;
          float price = s.nextFloat();
           s.nextLine();
           System.out.println();
-          b[i].display(title, author, price);
+          b[i].setDetails(title, author, price);
     }
-       
+       System.out.println("\nBook details:");
+        for (int i = 0; i < 2; i++) {
+         System.out.println("Details of Book "+(i+1));
+            b[i].display();
     }
 }
+}
+
 
  class BookDetails {
-     //Scanner sc =new Scanner(System.in);
-    public static void display(String a, String b, float c) {
-        System.out.println("Title: " + a +"\nAuthor: " + b +"\nPrice: "+ c);
-       //  sc.nextLine();
+    String title, author;
+    float price;
+
+    
+    public void setDetails(String t, String a, float p) {
+        title = t;
+        author = a;
+        price = p;
+    }
+
+    public void display() {
+        System.out.println();
+        System.out.println("Title: " + title);
+        System.out.println("Author: " + author);
+        System.out.println("Price: " + price);
+        System.out.println();
     }
 }
-
