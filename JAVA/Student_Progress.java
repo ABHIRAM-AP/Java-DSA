@@ -97,4 +97,5 @@ class Progress
         }
         System.out.println("\nTotal= "+total);
     }
+    
 }
