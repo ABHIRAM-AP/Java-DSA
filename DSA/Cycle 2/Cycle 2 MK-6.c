@@ -233,7 +233,7 @@ int main()
             scanf("%d",&key);
             printf("Enter the element to be added:");
             scanf("%d",&data);
-            InsertRandom(head,key,data);
+           head= InsertRandom(head,key,data);
             break;
         case 4:
       
