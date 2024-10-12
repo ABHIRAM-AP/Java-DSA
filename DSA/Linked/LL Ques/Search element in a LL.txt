@@ -1,0 +1,79 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *GetNode();
+struct Node *GetNode()
+{
+    struct Node *N=(struct Node*)malloc(sizeof(struct Node));
+    return N;
+}
+
+void search(struct Node *,int);
+void search(struct Node *head,int data)
+{
+    struct Node *ptr=head;
+    int flag=0;
+    while(ptr!=NULL)
+    {
+        if(ptr->data == data)
+        {
+            flag=1;
+            break;
+        }
+        else
+        {
+            ptr=ptr->next;
+        }
+    }
+    if(flag == 1)
+    {
+        printf("Item found");
+    }
+    else
+    {
+        printf("not");
+    }
+}
+
+
+
+
+int main()
+{
+    struct Node *head;
+    head = GetNode();
+    
+    head->data = 7;
+    head->next = NULL;
+    
+    struct Node *ptr = GetNode();
+    
+    ptr->data = 90;
+    ptr->next=NULL;
+    
+    head->next = ptr;
+    
+     struct Node *ptr1 = GetNode();
+    
+    ptr1->data = 10;
+    ptr1->next=NULL;
+    
+    ptr->next = ptr1;
+    
+
+   ptr = head;
+    int data=0;
+    printf("Enter data to be searched:\n");
+    scanf("%d",&data);
+    
+    search(head,data);
+    
+ 
+    return 0;
+}

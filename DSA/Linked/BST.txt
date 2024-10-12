@@ -1,0 +1,185 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct BST {
+    int data;
+    struct BST *leftChild, *rightChild;
+} BST;
+
+BST *GetNode() {
+    BST *N = (struct BST *)malloc(sizeof(struct BST));
+    return N;
+}
+
+BST *insertBST(BST *root, int data) {
+    BST *newNode = GetNode();
+    newNode->data = data;
+    newNode->leftChild = newNode->rightChild = NULL;
+
+    BST *ptr = root, *ptr1 = NULL;
+
+    while (ptr != NULL) {
+        ptr1 = ptr;
+        if (data < ptr->data) {
+            ptr = ptr->leftChild;
+        } else if (data > ptr->data) {
+            ptr = ptr->rightChild;
+        } else {
+            printf("Item Already Exists\n");
+            return root;
+        }
+    }
+
+    if (root == NULL) {
+        return newNode;
+    } else if (data < ptr1->data) {
+        ptr1->leftChild = newNode;
+    } else {
+        ptr1->rightChild = newNode;
+    }
+
+    return root;
+}
+
+BST *searchBST(BST *root, int data) {
+    BST *ptr = root;
+
+    while (ptr != NULL) {
+        if (data < ptr->data) {
+            ptr = ptr->leftChild;
+        } else if (data > ptr->data) {
+            ptr = ptr->rightChild;
+        } else {
+            return ptr;
+        }
+    }
+    return NULL;
+}
+
+BST *SUCC(BST *ptr) {
+  
+    BST *succ = ptr->rightChild;
+    while (succ != NULL && succ->leftChild != NULL) {
+        succ = succ->leftChild;
+    }
+
+    return succ; // Return the in-order successor
+}
+
+BST *deleteBST(BST *root, int data, int *del) {
+    BST *ptr = root;
+    BST *parent = NULL;
+
+    while (ptr != NULL && ptr->data != data) {
+        parent = ptr;
+        if (data < ptr->data) {
+            ptr = ptr->leftChild;
+        } else {
+            ptr = ptr->rightChild;
+        }
+    }
+
+    // If node not found
+    if (ptr == NULL) {
+        printf("Item not found\n");
+        *del = -1;
+        return root;
+    }
+
+    *del = ptr->data; // Set the deleted value
+
+    // Case 1: Node has no children (leaf node)
+    if (ptr->leftChild == NULL && ptr->rightChild == NULL) {
+        if (ptr == root) {
+            root = NULL; 
+        } else if (parent->leftChild == ptr) {
+            parent->leftChild = NULL;
+        } else {
+            parent->rightChild = NULL;
+        }
+        free(ptr);
+    }
+    // Case 2: Node has only one child
+    else if (ptr->leftChild == NULL || ptr->rightChild == NULL) {
+        BST *child = (ptr->leftChild != NULL) ? ptr->leftChild : ptr->rightChild;
+
+        if (ptr == root) {
+            root = child; 
+        } else if (parent->leftChild == ptr) {
+            parent->leftChild = child;
+        } else {
+            parent->rightChild = child;
+        }
+        free(ptr);
+    }
+    // Case 3: Node has two children
+    else {
+        // Find the in-order successor (smallest node in the right subtree)
+        BST *succ = SUCC(ptr); // Get the in-order successor
+        ptr->data = succ->data; // Copy the successor's value to the node to be deleted
+
+        // Now delete the successor
+        BST *succParent = ptr; // Start from the node to be deleted
+        while (succParent->leftChild != succ && succParent->rightChild != succ) {
+            if (succ->data < succParent->data) {
+                succParent = succParent->leftChild;
+            } else {
+                succParent = succParent->rightChild;
+            }
+        }
+
+        // Remove the successor node
+        if (succParent->leftChild == succ) {
+            succParent->leftChild = succ->rightChild; // Update parent's left child
+        } else {
+            succParent->rightChild = succ->rightChild; // Update parent's right child
+        }
+
+        free(succ); // Free the successor node
+    }
+
+    return root;
+}
+
+
+
+int main() {
+    BST *root = NULL;
+    int option = 0, data = 0;
+
+    while (option != 4) {
+        printf("Enter choice:\n1-Insert\n2-Search\n3-Delete\n4-Exit:\n");
+        scanf("%d", &option);
+
+        switch (option) {
+            case 1:
+                printf("Enter data: ");
+                scanf("%d", &data);
+                root = insertBST(root, data);
+                break;
+
+            case 2:
+                printf("Enter data to search: ");
+                scanf("%d", &data);
+                BST *address = searchBST(root, data);
+                if (address != NULL) {
+                    printf("Item %d found at address %p.\n", address->data, address);
+                } else {
+                    printf("Item %d not found.\n", data);
+                }
+                break;
+
+            case 3:
+                printf("Enter data to be deleted: ");
+                int del_data, deletedValue = 0;
+                scanf("%d", &del_data);
+                root = deleteBST(root, del_data, &deletedValue);
+                if (deletedValue != -1) {
+                    printf("Deleted item: %d\n", deletedValue);
+                }
+                break;
+        }
+    }
+
+    return 0;
+}
