@@ -1,3 +1,6 @@
+## Code is wrong.
+
+
 #include<stdio.h>
 #define MAXSIZE 5
 
