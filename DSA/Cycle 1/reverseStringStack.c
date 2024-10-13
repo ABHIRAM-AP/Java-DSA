@@ -1,4 +1,4 @@
-## Code is wrong.
+// Code is wrong.
 
 
 #include<stdio.h>
