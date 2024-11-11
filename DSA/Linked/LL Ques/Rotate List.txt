@@ -54,7 +54,7 @@ struct Node *create(int n)
 struct Node *rotate(struct Node *);
 struct Node *rotate(struct Node *head)
 {
-    int count=0;
+    
     struct Node *ptr=head;
     struct Node *ptr1=NULL;
     
@@ -94,6 +94,6 @@ int main()
     head = create(n);
    head=rotate(head);
     display(head);
-     head=rotate(head);
-    display(head);
+    //  head=rotate(head);
+    // display(head);
 }

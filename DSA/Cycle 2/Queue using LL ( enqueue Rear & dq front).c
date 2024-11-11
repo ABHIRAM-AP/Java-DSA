@@ -46,6 +46,7 @@ struct Node *dequeue(struct Node *head, int *deleted_Item)
     {
         printf("Empty List\n");
         *deleted_Item= -1;
+return head;
     }
     
     ptr=head;
@@ -63,9 +64,9 @@ struct Node *dequeue(struct Node *head, int *deleted_Item)
         head=ptr->next;
         FRONT=head;
         free(ptr);
-        return head;
+        
     }
-    //return head;
+    return head;
 
 }
 

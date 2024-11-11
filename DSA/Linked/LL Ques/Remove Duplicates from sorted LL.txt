@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+// Helper function to create a new node
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to remove duplicates from a sorted linked list
+void removeDuplicates(Node* head) {
+    Node* current = head;
+
+    while (current != NULL && current->next != NULL) {
+        if (current->data == current->next->data) {
+            Node* duplicateNode = current->next;
+            current->next = current->next->next; // Skip the duplicate node
+            free(duplicateNode); // Free memory of the removed duplicate node
+        } else {
+            current = current->next; // Move to the next node if no duplicate
+        }
+    }
+}
+
+// Function to display the linked list
+void display(Node* head) {
+    Node* ptr = head;
+    while (ptr != NULL) {
+        printf("%d -> ", ptr->data);
+        ptr = ptr->next;
+    }
+    printf("NULL\n");
+}
+
+int main() {
+    // Creating a sorted linked list: 10 -> 20 -> 20 -> 30 -> 30 -> 30 -> 40 -> NULL
+    Node* head = createNode(10);
+    head->next = createNode(20);
+    head->next->next = createNode(20);
+    head->next->next->next = createNode(30);
+    head->next->next->next->next = createNode(30);
+    head->next->next->next->next->next = createNode(30);
+    head->next->next->next->next->next->next = createNode(40);
+
+    printf("Original list:\n");
+    display(head);
+
+    // Remove duplicates
+    removeDuplicates(head);
+
+    printf("List after removing duplicates:\n");
+    display(head);
+
+    return 0;
+}
