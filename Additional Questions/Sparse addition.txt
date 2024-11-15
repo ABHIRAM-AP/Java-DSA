@@ -1,0 +1,182 @@
+#include<stdio.h>
+
+void readArray(int a[][10],int r,int c)
+{
+      printf("Enter the elements:");
+    for(int i=0;i<r;i++)
+    {
+        for(int j=0;j<c;j++)
+        {
+            scanf("%d",&a[i][j]);
+        }
+    }
+}
+void printSparse(int sp[][10],int k)
+{
+     for(int i=0;i<k;i++)
+    {
+        printf("%d\t%d\t%d\n",sp[i][0],sp[i][1],sp[i][2]);
+    }
+}
+
+
+void changeSparse(int a[][10],int sp[][10],int r,int c)
+{
+    int k=1;
+    sp[0][0]=r;
+    sp[0][1]=c;
+    sp[0][2]=0;
+    for(int i=0;i<r;i++)
+    {
+        for(int j=0;j<c;j++)
+        {
+            if(a[i][j]!=0)
+            {
+                sp[k][0]=i;
+                sp[k][1]=j;
+                sp[k][2]=a[i][j];
+                k++;
+            }
+        }
+    }
+    sp[0][2]=k-1;
+    printf("\nSparse Matrix is\n");
+      printSparse(sp,k);
+     
+}
+void changeToOriginal(int sp[][10], int r, int c, int a[][10])
+{
+    // Initialize the original matrix with 0
+    for (int i = 0; i < r; i++)
+    {
+        for (int j = 0; j < c; j++)
+        {
+            a[i][j] = 0;
+        }
+    }
+
+    // Rebuild the original matrix from the sparse matrix
+    for (int i = 1; i <= sp[0][2]; i++)  // sp[0][2] is the count of non-zero elements
+    {
+        int row = sp[i][0];    // Row index from sparse matrix
+        int col = sp[i][1];    // Column index from sparse matrix
+        int value = sp[i][2];  // Value from sparse matrix
+
+        a[row][col] = value;   // Set the value in the original matrix
+    }
+    for(int i=0;i<r;i++)
+    {
+        for(int j=0;j<c;j++)
+        {
+            printf("%d\t",a[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+
+void addSparse(int a[][10],int b[][10],int r,int c)
+{
+    int sum[10][10],i=1,j=1,k=1;
+    int original[10][10];
+   if( (a[0][0]==b[0][0]) && (a[0][1]==b[0][1]))
+   {
+           while (i <= a[0][2] && j <= b[0][2])
+        {
+           if( (a[i][0]==b[j][0]) && (a[i][1] == b[j][1]))
+                {
+                    sum[k][0]=a[i][0];
+                    sum[k][1]=a[i][1];
+                    sum[k][2]=a[i][2] + b[j][2];
+                    i++;
+                    j++;
+                    k++;
+                }
+                else if(a[i][0] == b[j][0]) //row equals
+                {
+                    if(a[i][1] < b[j][1])
+                    {
+                        sum[k][0]=a[i][0];
+                        sum[k][1]=a[i][1];
+                        sum[k][2]=a[i][2];
+                        i++;
+                        k++;
+                    }
+                    else
+                    {
+                         sum[k][0]=b[j][0];
+                        sum[k][1]=b[j][1];
+                        sum[k][2]=b[j][2];
+                        j++;
+                        k++;
+                    }
+                }
+                else           //column equals
+                    {
+                        if(a[i][0]<b[j][0])
+                        {
+                        sum[k][0]=a[i][0];
+                        sum[k][1]=a[i][1];
+                        sum[k][2]=a[i][2];
+                        i++;
+                        k++;
+                        }
+                        else
+                        {
+                        sum[k][0]=b[j][0];
+                        sum[k][1]=b[j][1];
+                        sum[k][2]=b[j][2];
+                        j++;
+                        k++;
+                        }
+                    }
+        }
+        
+        while(i<=a[0][2])
+        {
+           sum[k][0]=a[i][0];
+            sum[k][1]=a[i][1];
+            sum[k][2]=a[i][2];
+            i++;
+            k++; 
+        }
+        while(j<=b[0][2])
+        {
+        sum[k][0]=b[j][0];
+        sum[k][1]=b[j][1];
+        sum[k][2]=b[j][2];
+        j++;
+        k++;
+        }
+        sum[0][0] = a[0][0];  // Rows
+        sum[0][1] = a[0][1];  // Columns
+        sum[0][2] = k - 1;  
+   }
+    else
+    {
+        printf("Sparse Addition not possible\n");
+    }
+    printf("\n\n");
+    // 
+    changeToOriginal(sum, r, c, original); 
+   
+}
+
+
+int main()
+{
+    int a[10][10],b[10][10],sp1[10][10],sp2[10][10];
+      int r=0,c=0;
+    printf("Enter the row and column: ");
+     scanf("%d%d",&r,&c);
+      readArray(a,r,c);
+   readArray(b,r,c);
+    
+    changeSparse(a,sp1,r,c);
+    changeSparse(b,sp2,r,c);
+    
+    addSparse(sp1,sp2,r,c);
+     //printSparse(sp,k);
+    
+    return 0;
+}

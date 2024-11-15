@@ -1,54 +1,71 @@
-// Code is wrong.
-
-
 #include<stdio.h>
-#define MAXSIZE 5
+#include<stdlib.h>
+#include<string.h>
 
-typedef struct{
-    char stack[MAXSIZE];
+#define SIZE 100
+
+typedef struct Stack
+{
+    char a[SIZE];
     int top;
-    char rev[MAXSIZE];
-} Stack;
+}stack;
 
+void push(stack *s,const char character)
+{
+    if(s->top==SIZE -1)
+    {
+        printf("Stack Overflow\n");
+    }
+    else
+    {
+        s->top++;
+        s->a[s->top]=character;
+    }
+}
+int isEmpty(stack *s)
+{
+    if(s->top==-1)
+    {
+        return 1;
+    }
+    else return 0;
+}
+char pop(stack *s)
+{
+    if(s->top==-1)
+    {
+        printf("Stack Underflow\n");
+    }
+    else
+    {
+        char character=s->a[s->top];
+        s->top--;
+         return character;
+    }
+   
+}
 
-
-void reverseString(Stack*,const char *r);
-void reverseString(Stack* s, const char *r)
-{ 
-    int length =0;
-    int i=0;
-    while(r[i]!='\0')
+void revString(char string[])
+{
+    stack s;
+    s.top=-1;
+    for(int i=0;i<strlen(string);i++)
     {
-        length++;
-        i++;
+        push(&s,string[i]);
     }
-  
-      if (length > MAXSIZE) {
-        length = MAXSIZE;
-    }
-   for(i=0;i<length;i++)
+    while(!isEmpty(&s))
     {
-        s->rev[i]=r[length-i-1];
-        
-    }
-    s->rev[length]='\0';
-    
-    for(int i=0;i<length;i++)
-    {
-    printf("%c",s->rev[i]);
+        char character=pop(&s);
+        printf("%c",character);
     }
 }
 
-int main() {
-    Stack A;
-    A.top =-1;
-    char r[MAXSIZE + 1];
-   
+int main()
+{
+    char string[SIZE];
     printf("Enter a string:");
-    scanf("%5s",r);
-    
-    
-  
-    reverseString(&A,r);
+    scanf("%s",string);
+    revString(string);
     return 0;
+    
 }
