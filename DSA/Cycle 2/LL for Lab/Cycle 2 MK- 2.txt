@@ -1,0 +1,121 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+
+struct Node
+{
+    int data;
+    struct Node*next;
+};
+
+
+struct Node* GetNode();
+struct Node* GetNode()
+{
+    struct Node *N = (struct Node*)malloc(sizeof(struct Node));
+}
+
+struct Node *InsertFront(struct Node* , int );
+struct Node *InsertFront(struct Node* head, int data)
+{
+   struct Node* newNode = GetNode();
+    if(newNode == NULL)
+    {
+        printf("Insufficient Memory\n");
+    }
+    else
+    {
+        newNode->data=data;
+        newNode->next=head;
+        head=newNode;
+    }
+    return head;
+}
+
+
+struct Node *InsertRear(struct Node *,int);
+struct Node *InsertRear(struct Node *head,int data)
+{
+    struct Node *newNode = GetNode();
+    if(newNode ==NULL)
+    {
+        printf("Insufficient Memory\n");
+    }
+    else if(head==NULL)
+    {
+         newNode->data=data;
+        newNode->next=NULL;
+        head=newNode;
+    }
+    else
+    {
+        struct Node *ptr=head;
+        while(ptr->next!=NULL)
+        {
+            ptr=ptr->next;
+        }
+        newNode->data=data;
+        newNode->next=NULL;
+        ptr->next=newNode;
+    }
+    return head;
+}
+
+struct Node *display(struct Node*);
+struct Node *display(struct Node*head)
+{
+    struct Node*ptr;
+        ptr=head;
+        if(ptr!=NULL)
+        {
+            while(ptr!=NULL)
+            {
+                printf("%d\t",ptr->data);
+                ptr=ptr->next;
+            } 
+        }
+            else
+            {
+                printf("Empty List\n");
+            }
+}
+
+int main()
+{
+    int option=0,item=0;
+   
+   struct Node *head;
+   
+
+  
+    while(option!=8)
+    {
+         printf("\nEnter operation:\n1->Insert Front\n2->Insert Rear\n3->Insert Random\n4->Delete Front\n5->Delete Rear\n6->Delete Random\n7->Display List\n8->Exit\n");
+    scanf("%d",&option);
+    
+    
+    switch(option)
+    {
+        case 1:
+        printf("Enter the item:");
+        scanf("%d",&item);
+       head=InsertFront(head,item);
+        break;
+        
+        case 2:
+            printf("Enter the item:");
+            scanf("%d",&item);
+            head=InsertRear(head,item);
+            break;
+            
+     
+            
+            
+            
+        case 7:
+            display(head);
+            break;
+    }
+    
+    }
+}

@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+// Function to create a new node
+struct Node *GetNode() {
+    return (struct Node *)malloc(sizeof(struct Node));
+}
+
+// Function to sort the linked list using bubble sort
+struct Node *sort(struct Node *head) {
+    if (head == NULL) return head; // Empty list
+
+    int swapped;
+    struct Node *ptr1;
+    struct Node *lptr = NULL;
+
+    do {
+        swapped = 0;
+        ptr1 = head;
+
+        while (ptr1->next != lptr) {
+            if (ptr1->data > ptr1->next->data) {
+                // Swap data between nodes
+                int temp = ptr1->data;
+                ptr1->data = ptr1->next->data;
+                ptr1->next->data = temp;
+                swapped = 1;
+            }
+            ptr1 = ptr1->next;
+        }
+        lptr = ptr1; // Mark the last node as sorted
+    } while (swapped);
+
+    return head;
+}
+
+// Function to display the linked list
+void display(struct Node *head) {
+    struct Node *temp = head;
+    while (temp != NULL) {
+        printf("%d\t", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+// Main function
+int main() {
+    struct Node *head = NULL;
+    head = GetNode();
+    
+    head->data = 90;
+    head->next = NULL;
+    
+    struct Node *ptr = GetNode();
+    ptr->data = 20;
+    ptr->next = NULL;
+    
+    head->next = ptr;
+    
+    struct Node *ptr1 = GetNode();
+    ptr1->data = 100;
+    ptr1->next = NULL;
+    
+    ptr->next = ptr1;
+    
+    head = sort(head);
+    display(head);
+    
+    return 0;
+}
