@@ -1,0 +1,57 @@
+import java.util.*;
+
+interface College
+{
+    public String getCollegeName();
+}
+
+interface Department extends College{
+        public String getDepartmentName();
+}
+
+class Student implements Department
+{
+    String name,depart;
+    Student(String nam,String dep)
+    {
+        name=nam;
+        depart=dep;
+    }
+    public String getCollegeName()
+    {
+        return name;
+    }
+    public String getDepartmentName()
+    {
+        return depart;
+    }
+}
+
+class Main
+{
+    public static void main(String[]args)
+    {
+        String college="",department="";
+        Scanner s=new Scanner(System.in);
+        System.out.println("Enter number of students:");
+        int num=s.nextInt();
+        s.nextLine();
+        
+        Student []ob=new Student[num];
+        for(int i=0;i<num;i++)
+        {
+            
+            System.out.println("Enter College name:");
+            college=s.nextLine();
+            System.out.println("Enter Department:");
+            department=s.nextLine();
+            ob[i]=new Student(college,department);
+        }
+        for(int i=0;i<num;i++)
+        {
+        System.out.println(ob[i].getCollegeName());
+        System.out.println(ob[i].getDepartmentName());
+        System.out.println("\n");
+        }
+    }
+}

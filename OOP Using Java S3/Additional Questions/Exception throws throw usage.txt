@@ -1,0 +1,42 @@
+
+
+class SubMain
+{
+    int age=0;
+    SubMain(int age)
+    {
+        this.age=age;
+    }
+    public void ageValidate()throws ArithmeticException,NullPointerException 
+    
+    {
+        if(age<18)
+        {
+            throw new ArithmeticException("AE");
+        }
+        else
+        {
+           throw new NullPointerException("NPE");
+        }
+    }
+}
+
+public class Main
+{
+    public static void main(String[]args)
+    {
+        SubMain ob=new SubMain(13);
+        try
+        {
+        ob.ageValidate();
+    }
+    catch(ArithmeticException e)
+    {
+        System.out.println(e.getMessage());
+    }
+     catch(NullPointerException e)
+    {
+        System.out.println(e.getMessage());
+    }
+    }
+}
