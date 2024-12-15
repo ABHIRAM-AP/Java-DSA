@@ -4,110 +4,180 @@
 typedef struct BST
 {
     int data;
-    struct BST *leftChild,*rightChild;
-}BST;
+    struct BST *LC, *RC;
+} BST;
 
 BST *GetNode()
 {
-    struct BST *N=(struct BST*)malloc(sizeof(struct BST));
-    return N;
+    BST *n = (BST *)malloc(sizeof(BST));
+    return n;
 }
 
-BST *insertBST(BST*root,int data)
+BST *insertBST(BST *root, int data)
 {
+    BST *ptr1 = NULL, *ptr = root;
     BST *newNode = GetNode();
     newNode->data = data;
-   newNode->leftChild=newNode->rightChild=NULL;
-   
-   
-    BST *ptr=root;
-    BST *ptr1=NULL;
+    newNode->LC = newNode->RC = NULL;
 
-    while(ptr!=NULL)
-    {
-        ptr1=ptr;
-        if(data <ptr->data)
-        {
-            ptr=ptr->leftChild;
-        }
-        else if(data > ptr->data)
-        {
-            ptr=ptr->rightChild;
-        }
-        else 
-        {
-            printf("Item Already Exists\n");
-            return root;
-        }
-    }
-    
-    if(root==NULL)
-    {
+    if (root == NULL)
         return newNode;
-    }   
-        else if(data<ptr1->data)
+
+    while (ptr != NULL)
+    {
+        ptr1 = ptr;
+
+        if (data < ptr->data)
         {
-            ptr1->leftChild=newNode;
-          
+            ptr = ptr->LC;
+        }
+        else if (data > ptr->data)
+        {
+            ptr = ptr->RC;
         }
         else
         {
-             ptr1->rightChild=newNode;
+            printf("Exists\n");
+            return root;
         }
-    
+    }
+
+    if (data < ptr1->data)
+    {
+        ptr1->LC = newNode;
+    }
+    else
+    {
+        ptr1->RC = newNode;
+    }
+
     return root;
 }
 
-
-
-
-BST *searchBST(BST *root, int data) {
+BST *searchBST(BST *root, int data)
+{
     BST *ptr = root;
-
-    while (ptr != NULL) {
-        if (data < ptr->data) {
-            ptr = ptr->leftChild; 
-        } else if (data > ptr->data) {
-            ptr = ptr->rightChild; 
-        } else {
-            return ptr; 
-        }
+    while (ptr != NULL)
+    {
+        if (data < ptr->data)
+            ptr = ptr->LC;
+        else if (data > ptr->data)
+            ptr = ptr->RC;
+        else
+            return ptr;
     }
-    return NULL; 
+    return NULL;
 }
 
+BST *SUCC(BST *ptr)
+{
+    BST *ptr3 = ptr->RC;
+    while (ptr3 != NULL && ptr3->LC != NULL)
+    {
+        ptr3 = ptr3->LC;
+    }
+    return ptr3;
+}
 
+BST *deleteBST(BST *root, int data, int *del)
+{
+    BST *ptr = root, *parent = NULL;
+
+    // Find the node to delete
+    while (ptr != NULL && ptr->data != data)
+    {
+        parent = ptr;
+        if (data < ptr->data)
+            ptr = ptr->LC;
+        else
+            ptr = ptr->RC;
+    }
+
+    if (ptr == NULL)
+    {
+        printf("Not found\n");
+        return root;
+    }
+
+    *del = ptr->data;
+
+    // Case 1: Node has no children
+    if (ptr->LC == NULL && ptr->RC == NULL)
+    {
+        if (ptr == root)  // If it's the root node
+            root = NULL;
+        else if (parent->LC == ptr)
+            parent->LC = NULL;
+        else
+            parent->RC = NULL;
+        free(ptr);
+    }
+    // Case 2: Node has one child
+    else if (ptr->LC == NULL || ptr->RC == NULL)
+    {
+        BST *child = ptr->LC != NULL ? ptr->LC : ptr->RC;
+        if (ptr == root)  // If it's the root node
+            root = child;
+        else if (parent->LC == ptr)
+            parent->LC = child;
+        else
+            parent->RC = child;
+        free(ptr);
+    }
+    // Case 3: Node has two children
+    else
+    {
+        // Use the SUCC function to find the in-order successor
+        BST *succ = SUCC(ptr);
+
+        // Replace current node's data with the successor's data
+        ptr->data = succ->data;
+
+        // Remove the successor node
+        if (ptr->RC == succ)
+            ptr->RC = succ->RC;  // Successor is directly in the right subtree
+        else
+        {
+            // Find the parent of the successor (already handled by SUCC)
+            BST *succParent = ptr->RC;
+            while (succParent->LC != succ)
+                succParent = succParent->LC;
+
+            succParent->LC = succ->RC;  // Successor's parent now points to its right child
+        }
+
+        free(succ);
+    }
+
+    return root;
+}
+
+void InOrder(BST *root)
+{
+    if (root)
+    {
+        InOrder(root->LC);
+        printf("%d\t", root->data);
+        InOrder(root->RC);
+    }
+}
 
 int main()
 {
- BST *root=NULL;
- int option=0,data=0;
+    BST *root = NULL;
+    int del = 0;
 
- while(option!=4)
- {
-     printf("Enter choice:\n1-Insert\n2-Search\n3-Delete\n4-Exit:\n");
-     scanf("%d",&option);
-     
-     switch(option)
-     {
-         case 1:
-         printf("Enter data:");
-         scanf("%d",&data);
-         
-         root=insertBST(root,data);
-         break;
-         
-         case 2:
-        printf("Enter data to search: ");
-                scanf("%d", &data);
-          BST *address=searchBST(root,data);
-         if (address!= NULL) {
-        printf("Item %d found at address %p.\n", address->data,address);
-                } else {
-                    printf("Item %d not found.\n", data);
-                }
-         break;
-     }
- }
-    
+    // Insert elements into the BST
+    root = insertBST(root, 20);
+    root = insertBST(root, 10);
+    root = insertBST(root, 30);
+    root = insertBST(root, 5);
+    root = insertBST(root, 15);
+
+    // Delete node 10 and print the tree
+    root = deleteBST(root, 10, &del);
+
+    // In-order traversal
+    InOrder(root);
+    return 0;
 }

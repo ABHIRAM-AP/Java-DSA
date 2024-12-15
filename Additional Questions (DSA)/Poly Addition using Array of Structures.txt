@@ -1,0 +1,86 @@
+#include <stdio.h>
+
+
+typedef struct {
+    int coefficient;
+    int exponent;
+} Term;
+
+void readPoly(Term poly[],int n)
+{
+     printf("Enter the terms of the polynomial (coefficient and exponent):\n");
+    for (int i = 0; i < n; i++) {
+        printf("Term %d:\n", i + 1);
+        printf("Coefficient: ");
+        scanf("%d", &poly[i].coefficient);
+        printf("Exponent: ");
+        scanf("%d", &poly[i].exponent);
+    }
+}
+
+void addPol(Term poly1[], int n1, Term poly2[], int n2, Term result[], int *resultSize) {
+    int i = 0, j = 0, k = 0;
+
+    while (i < n1 && j < n2) {
+        if (poly1[i].exponent == poly2[j].exponent) {
+            result[k].coefficient = poly1[i].coefficient + poly2[j].coefficient;
+            result[k].exponent = poly1[i].exponent;
+            i++;
+            j++;
+        } else if (poly1[i].exponent > poly2[j].exponent) {
+            result[k] = poly1[i];
+            i++;
+        } else {
+            result[k] = poly2[j];
+            j++;
+        }
+        k++;
+    }
+
+
+    while (i < n1) {
+        result[k] = poly1[i];
+        i++;
+        k++;
+    }
+
+
+    while (j < n2) {
+        result[k] = poly2[j];
+        j++;
+        k++;
+    }
+
+    *resultSize = k; 
+}
+
+
+void printPolynomial(Term poly[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%dx^%d", poly[i].coefficient, poly[i].exponent);
+        if (i < n - 1) {
+            printf(" + ");
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    int n1,n2,resultSize=0;
+
+    printf("Enter the number of terms in the first polynomial: ");
+    scanf("%d", &n1);
+    
+     printf("Enter the number of terms in the second polynomial: ");
+    scanf("%d", &n2);
+
+    Term p1[n1],p2[n2],result[n1+n2];
+    readPoly(p1,n1);
+    readPoly(p2,n2);
+    
+    addPol(p1,n1,p2,n2,result,&resultSize);
+   
+      printPolynomial(result, resultSize);
+
+    return 0;
+}
